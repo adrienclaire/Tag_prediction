@@ -3,7 +3,7 @@ import boto3
 from flask import Flask, request, jsonify
 import joblib
 import tensorflow_hub as hub
-from utils import clean_text, transform_dl_fct # Import functions from utils.py
+from utils import clean_text, transform_dl_fct  # Import functions from utils.py
 import pickle
 
 app = Flask(__name__)
@@ -48,18 +48,15 @@ def predict():
     tokenized_text = transform_dl_fct(cleaned_text)
     
     # Convert to embedding
-    embedding = embed([tokenized_text])  # Assuming USE is loaded
+    embedding = embed([tokenized_text])
     
     # Predict tags
-    prediction = model.predict(embedding)
-    
-   # Predict tags (this will return a binary matrix)
     y_pred_binary = model.predict(embedding)
     
     # Convert binary predictions to actual tags
     predicted_tags = mlb.inverse_transform(y_pred_binary)
     
-    return jsonify({'predicted_tags': predicted_tags})
+    return jsonify({'predicted_tags': predicted_tags[0]})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
