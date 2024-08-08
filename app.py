@@ -2,6 +2,7 @@ import os
 import boto3
 from flask import Flask, request, jsonify
 import joblib
+from utils import clean_text # Import functions from utils.py
 
 app = Flask(__name__)
 
@@ -27,11 +28,12 @@ model = joblib.load(model_path)
 def predict():
     data = request.get_json(force=True)
     text = data['text']
+    cleaned_text = clean_text(text)  # Use clean_text function here
     # Preprocess the text here (e.g., tokenization, padding)
     # Assuming the text is preprocessed into 'padded_sequence'
     
     # Predict tags
-    prediction = model.predict([padded_sequence])
+    prediction = model.predict([cleaned_text])
     
     # Convert prediction to tags
     predicted_tags = list(prediction[0])
