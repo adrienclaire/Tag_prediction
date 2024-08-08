@@ -12,7 +12,7 @@ aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
 s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
 
 # Define the S3 bucket and model file
-bucket_name = 'your-bucket-name'
+bucket_name = 'openclassroomprojet5'
 model_file_key = 'model.pkl'
 
 # Download the model file from S3 if it doesn't exist locally
