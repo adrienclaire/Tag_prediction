@@ -2,7 +2,8 @@ import os
 import boto3
 from flask import Flask, request, jsonify
 import joblib
-from utils import clean_text # Import functions from utils.py
+import tensorflow_hub as hub
+from utils import clean_text, transform_dl_fct # Import functions from utils.py
 
 app = Flask(__name__)
 
@@ -24,16 +25,27 @@ if not os.path.exists(model_path):
 # Load the model
 model = joblib.load(model_path)
 
+# Load the Universal Sentence Encoder
+print("Loading Universal Sentence Encoder...")
+embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+print("USE model loaded successfully")
+
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json(force=True)
     text = data['text']
-    cleaned_text = clean_text(text)  # Use clean_text function here
-    # Preprocess the text here (e.g., tokenization, padding)
-    # Assuming the text is preprocessed into 'padded_sequence'
+    
+    # Clean the text
+    cleaned_text = clean_text(text)
+    
+    # Tokenize the cleaned text
+    tokenized_text = transform_dl_fct(cleaned_text)
+    
+    # Convert to embedding
+    embedding = embed([tokenized_text])  # Assuming USE is loaded
     
     # Predict tags
-    prediction = model.predict([cleaned_text])
+    prediction = model.predict(embedding)
     
     # Convert prediction to tags
     predicted_tags = list(prediction[0])
