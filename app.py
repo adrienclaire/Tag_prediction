@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 import joblib
 import tensorflow_hub as hub
 from utils import clean_text, transform_dl_fct # Import functions from utils.py
-import picke
+import pickle
 
 app = Flask(__name__)
 
