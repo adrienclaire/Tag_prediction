@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import string
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
 import matplotlib.pyplot as plt
 
 # Initialize stopwords and lemmatizer
@@ -91,3 +92,12 @@ def clean_text(text, lemmatize=True):
         text = " ".join([word for word in text.split() if word not in stop and word.isalpha()])
 
     return text
+
+def transform_dl_fct(desc_text):
+    """
+    Prepare text for Deep Learning models (e.g., USE, BERT).
+    """
+    word_tokens = word_tokenize(desc_text)
+    lw = [w.lower() for w in word_tokens if (not w.startswith("@")) and (not w.startswith("http"))]
+    transf_desc_text = ' '.join(lw)
+    return transf_desc_text
