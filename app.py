@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 import joblib
 import tensorflow_hub as hub
 from utils import clean_text, transform_dl_fct # Import functions from utils.py
+import picke
 
 app = Flask(__name__)
 
@@ -24,6 +25,11 @@ if not os.path.exists(model_path):
 
 # Load the model
 model = joblib.load(model_path)
+
+# Load the trained MultiLabelBinarizer
+with open('mlb.pkl', 'rb') as file:
+    mlb = pickle.load(file)
+print("MultiLabelBinarizer loaded successfully")
 
 # Load the Universal Sentence Encoder
 print("Loading Universal Sentence Encoder...")
@@ -47,8 +53,11 @@ def predict():
     # Predict tags
     prediction = model.predict(embedding)
     
-    # Convert prediction to tags
-    predicted_tags = list(prediction[0])
+   # Predict tags (this will return a binary matrix)
+    y_pred_binary = model.predict(embedding)
+    
+    # Convert binary predictions to actual tags
+    predicted_tags = mlb.inverse_transform(y_pred_binary)
     
     return jsonify({'predicted_tags': predicted_tags})
 
