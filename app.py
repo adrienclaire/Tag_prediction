@@ -16,7 +16,7 @@ app = Flask(__name__)
 from botocore.exceptions import ClientError
 
 def get_secret():
-    secret_name = "aws_secret_keys"  # Replace with your secret's name
+    secret_name = "aws_secret_keys"  
     region_name = "eu-north-1"
 
     # Create a Secrets Manager client
