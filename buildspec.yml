@@ -8,7 +8,7 @@ phases:
   pre_build:
     commands:
       - echo Running unit tests...
-      - pytest --maxfail=1 --disable-warnings --junitxml=report.xml
+      - pytest tests --maxfail=1 --disable-warnings --junitxml=report.xml
   build:
     commands:
       - echo Build completed.
