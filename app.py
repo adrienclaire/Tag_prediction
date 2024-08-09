@@ -8,10 +8,41 @@ import pickle
 
 app = Flask(__name__)
 
-# Configure AWS credentials from environment variables
-aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID')
-aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
+# Use this code snippet in your app.
+# If you need more information about configurations
+# or implementing the sample code, visit the AWS docs:
+# https://aws.amazon.com/developer/language/python/
 
+from botocore.exceptions import ClientError
+
+def get_secret():
+    secret_name = "aws_secret_keys"  # Replace with your secret's name
+    region_name = "eu-north-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        raise e
+
+    secret = get_secret_value_response['SecretString']
+    secret_dict = json.loads(secret)  # Assuming the secret is stored as a JSON string
+    return secret_dict
+
+# Retrieve AWS secrets
+secrets = get_secret()
+aws_access_key_id = secrets['AWS_ACCESS_KEY_ID']
+aws_secret_access_key = secrets['AWS_SECRET_ACCESS_KEY']
+
+# Configure AWS credentials using the retrieved secrets
 s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
 
 # Define the S3 bucket and model file
