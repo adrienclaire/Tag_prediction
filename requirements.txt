@@ -10,3 +10,4 @@ tqdm
 pandas
 numpy
 matplotlib
+pytest
