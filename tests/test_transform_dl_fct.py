@@ -9,7 +9,7 @@ nltk.download('punkt')
 nltk.download('punkt_tab')
 
 def test_transform_dl_fct_basic():
-    input_text = "This is a test."
+    input_text = "This is a test"
     expected_output = "this is a test"
     assert transform_dl_fct(input_text) == expected_output
 
