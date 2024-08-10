@@ -69,6 +69,10 @@ print("Loading Universal Sentence Encoder...")
 embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 print("USE model loaded successfully")
 
+@app.route('/health')
+def health_check():
+    return 'OK', 200
+
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json(force=True)
@@ -92,4 +96,4 @@ def predict():
     return jsonify({'predicted_tags': predicted_tags[0]})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run()
