@@ -12,3 +12,4 @@ numpy
 matplotlib
 pytest
 botocore
+html5lib
