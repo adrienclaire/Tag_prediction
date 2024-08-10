@@ -14,5 +14,5 @@ def test_clean_text_with_stopwords():
 
 def test_clean_text_with_emojis():
     input_text = "Test with emoji 😊!"
-    expected_output = "test"
+    expected_output = "test emoji"
     assert clean_text(input_text) == expected_output
