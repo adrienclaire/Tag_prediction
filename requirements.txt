@@ -13,3 +13,4 @@ matplotlib
 pytest
 botocore
 html5lib
+gunicorn
