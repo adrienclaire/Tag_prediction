@@ -8,7 +8,7 @@ phases:
   pre_build:
     commands:
       - echo Setting PYTHONPATH...
-      - export PYTHONPATH=$PYTHONPATH:$CODEBUILD_SRC_DIR  # Replace with the correct path if needed
+      #- export PYTHONPATH=$PYTHONPATH:$CODEBUILD_SRC_DIR  # Replace with the correct path if needed
       - echo Running unit tests...
       - pytest tests --maxfail=1 --disable-warnings --junitxml=report.xml
   build:
