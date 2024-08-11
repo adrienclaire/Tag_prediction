@@ -1,3 +1,10 @@
+import nltk
+
+# Ensure that the required NLTK data files are downloaded
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('punkt')
+
 import os
 import boto3
 from flask import Flask, request, jsonify, render_template

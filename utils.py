@@ -1,3 +1,8 @@
+import nltk
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('punkt')
+
 import re
 from bs4 import BeautifulSoup
 import string
@@ -5,10 +10,6 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 
-import nltk
-nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('punkt')
 
 # Initialize stopwords and lemmatizer
 stop = stopwords.words('english')
