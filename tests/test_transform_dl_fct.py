@@ -1,12 +1,7 @@
 # tests/test_transform_dl_fct.py
 import pytest
 from utils import transform_dl_fct
-import nltk
 
-nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('punkt')
-nltk.download('punkt_tab')
 
 def test_transform_dl_fct_basic():
     input_text = "This is a test"
