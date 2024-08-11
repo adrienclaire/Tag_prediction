@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stack Overflow Tag Predictor</title>
+    <title>StackOverflow Tag Predictor App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css">
     <style>
         body {
@@ -15,6 +15,22 @@
             width: 100%;
             height: 100px;
         }
+        /* Style for the loading spinner */
+        #loading {
+            display: none;
+            margin: 20px auto;
+            width: 50px;
+            height: 50px;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -24,12 +40,21 @@
         <br>
         <button type="submit">Predict Tags</button>
     </form>
+
+    <!-- Loading spinner -->
+    <div id="loading"></div>
+
     <h2>Predicted Tags</h2>
     <div id="tags"></div>
 
     <script>
         document.getElementById('questionForm').addEventListener('submit', async function(event) {
             event.preventDefault();
+
+            // Show the loading spinner
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('tags').innerHTML = ''; // Clear previous tags
+
             const questionText = document.getElementById('questionText').value;
 
             const response = await fetch('/predict', {
@@ -41,6 +66,9 @@
             });
 
             const result = await response.json();
+
+            // Hide the loading spinner and show the predicted tags
+            document.getElementById('loading').style.display = 'none';
             document.getElementById('tags').innerHTML = result.predicted_tags.join(', ');
         });
     </script>
