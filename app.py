@@ -111,13 +111,16 @@ def predict():
     # Convert to embedding
     embedding = embed([tokenized_text])
     
-    # Predict tags
-    y_pred_binary = model.predict(embedding)
+    # Predict tags (this will return probabilities for each tag)
+    y_pred_proba = model.predict(embedding)
     
-    # Convert binary predictions to actual tags
-    predicted_tags = mlb.inverse_transform(y_pred_binary)
+    # Sort the predicted probabilities in descending order and get indices of the top 3 tags
+    top_3_indices = (-y_pred_proba).argsort()[0, :3]
     
-    return jsonify({'predicted_tags': predicted_tags[0]})
+    # Convert the top 3 binary predictions to actual tags
+    top_3_tags = [mlb.classes_[i] for i in top_3_indices]
+    
+    return jsonify({'predicted_tags': top_3_tags})
 
 if __name__ == '__main__':
     app.run(debug=True)
