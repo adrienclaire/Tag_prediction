@@ -69,10 +69,20 @@ if not os.path.exists(model_path):
 # Load the model
 model = joblib.load(model_path)
 
-# Load the trained MultiLabelBinarizer
-with open('mlb.pkl', 'rb') as file:
+# Load the mlb file from s3
+mlb_file_name = 'mlb.pkl'
+# Download the file from S3 to a local file
+s3.download_file(bucket_name, mlb_file_name, mlb_file_name)
+
+# Load the model from the downloaded file
+with open(mlb_file_name, 'rb') as file:
     mlb = pickle.load(file)
-print("MultiLabelBinarizer loaded successfully")
+print("MultiLabelBinarizer loaded successfully from s3")
+
+# Load the trained MultiLabelBinarizer
+#with open('mlb.pkl', 'rb') as file:
+#    mlb = pickle.load(file)
+#print("MultiLabelBinarizer loaded successfully")
 
 # Load the Universal Sentence Encoder
 print("Loading Universal Sentence Encoder...")
