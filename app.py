@@ -15,9 +15,7 @@ app = Flask(__name__)
 # or implementing the sample code, visit the AWS docs:
 # https://aws.amazon.com/developer/language/python/
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+
 
 from botocore.exceptions import ClientError
 
@@ -73,6 +71,10 @@ print("Loading Universal Sentence Encoder...")
 embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 print("USE model loaded successfully")
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/health')
 def health_check():
     return 'OK', 200
@@ -100,4 +102,4 @@ def predict():
     return jsonify({'predicted_tags': predicted_tags[0]})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
