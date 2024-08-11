@@ -1,6 +1,6 @@
 import os
 import boto3
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import joblib
 import tensorflow_hub as hub
 from utils import clean_text, transform_dl_fct  # Import functions from utils.py
@@ -15,7 +15,9 @@ app = Flask(__name__)
 # or implementing the sample code, visit the AWS docs:
 # https://aws.amazon.com/developer/language/python/
 
-
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 from botocore.exceptions import ClientError
 
@@ -74,11 +76,6 @@ print("USE model loaded successfully")
 @app.route('/health')
 def health_check():
     return 'OK', 200
-
-@app.route('/')
-def home():
-    return 'OK', 200
-
 
 @app.route('/predict', methods=['POST'])
 def predict():

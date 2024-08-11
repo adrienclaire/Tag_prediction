@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack Overflow Tag Predictor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css">
+    <style>
+        body {
+            max-width: 800px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stack Overflow Tag Predictor</h1>
+    <form id="questionForm">
+        <textarea id="questionText" placeholder="Enter your Stack Overflow question here..."></textarea>
+        <br>
+        <button type="submit">Predict Tags</button>
+    </form>
+    <h2>Predicted Tags</h2>
+    <div id="tags"></div>
+
+    <script>
+        document.getElementById('questionForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const questionText = document.getElementById('questionText').value;
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: questionText })
+            });
+
+            const result = await response.json();
+            document.getElementById('tags').innerHTML = result.predicted_tags.join(', ');
+        });
+    </script>
+</body>
+</html>
