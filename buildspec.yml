@@ -17,9 +17,10 @@ phases:
 
 artifacts:
   files:
-    - app.py
-    - utils.py
-    - requirements.txt
-    - report.xml
-    - Procfile
-    - mlb.pkl
+    - '**/*'
+    #- app.py
+    #- utils.py
+    #- requirements.txt
+    #- report.xml
+    #- Procfile
+    #- mlb.pkl
