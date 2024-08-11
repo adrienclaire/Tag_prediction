@@ -53,7 +53,7 @@ mapping = {
 
 def clean_text(text, lemmatize=True):
     """
-    Clean and preprocess text for LDA.
+    Clean and preprocess text.
 
     Parameters:
     text (str): The text to be cleaned.
