@@ -15,6 +15,8 @@ app = Flask(__name__)
 # or implementing the sample code, visit the AWS docs:
 # https://aws.amazon.com/developer/language/python/
 
+
+
 from botocore.exceptions import ClientError
 
 def get_secret():
@@ -72,6 +74,11 @@ print("USE model loaded successfully")
 @app.route('/health')
 def health_check():
     return 'OK', 200
+
+@app.route('/')
+def home():
+    return 'OK', 200
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
