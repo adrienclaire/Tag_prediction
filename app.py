@@ -114,11 +114,21 @@ def predict():
     # Predict tags (this will return probabilities for each tag)
     y_pred_proba = model.predict(embedding)
     
+    # Log probabilities for debugging
+    print("Predicted Probabilities:", y_pred_proba)
+    
     # Sort the predicted probabilities in descending order and get indices of the top 3 tags
     top_3_indices = (-y_pred_proba).argsort()[0, :3]
     
+    # Check the actual probabilities of the top 3 tags
+    top_3_probs = y_pred_proba[0, top_3_indices]
+    print("Top 3 Probabilities:", top_3_probs)
+    
     # Convert the top 3 binary predictions to actual tags
     top_3_tags = [mlb.classes_[i] for i in top_3_indices]
+    
+    # Log selected tags for debugging
+    print("Top 3 Tags:", top_3_tags)
     
     return jsonify({'predicted_tags': top_3_tags})
 
