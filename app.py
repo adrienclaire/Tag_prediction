@@ -59,10 +59,10 @@ s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_k
 
 # Define the S3 bucket and model file
 bucket_name = 'openclassroomprojet5'
-model_file_key = 'USE_SVC_SL_NMLB.pkl'
+model_file_key = 'USE_SVC_SL_v2.pkl'
 
 # Download the model file from S3 if it doesn't exist locally
-model_path = 'USE_SVC_SL_NMLB.pkl'
+model_path = 'USE_SVC_SL_v2.pkl'
 if not os.path.exists(model_path):
     s3.download_file(bucket_name, model_file_key, model_path)
 
