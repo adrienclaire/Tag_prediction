@@ -117,20 +117,32 @@ def predict():
     # Log probabilities for debugging
     print("Predicted Probabilities:", y_pred_proba)
     
-    # Sort the predicted probabilities in descending order and get indices of the top 3 tags
-    top_3_indices = (-y_pred_proba).argsort()[0, :3]
+    # Set a threshold for prediction confidence
+    threshold = 0.2  # Adjust this threshold based on your needs
+    print(f"Threshold: {threshold}")
     
-    # Check the actual probabilities of the top 3 tags
-    top_3_probs = y_pred_proba[0, top_3_indices]
-    print("Top 3 Probabilities:", top_3_probs)
+    # Sort the predicted probabilities in descending order
+    sorted_indices = (-y_pred_proba).argsort()[0]
+    top_indices = []
     
-    # Convert the top 3 binary predictions to actual tags
-    top_3_tags = [mlb.classes_[i] for i in top_3_indices]
+    # Select indices of tags above the threshold
+    for i in sorted_indices:
+        if y_pred_proba[0, i] >= threshold:
+            top_indices.append(i)
+        if len(top_indices) >= 3:
+            break
+    
+    # Check the actual probabilities of the selected tags
+    top_probs = y_pred_proba[0, top_indices]
+    print("Top Probabilities:", top_probs)
+    
+    # Convert the selected indices to actual tags
+    top_tags = [mlb.classes_[i] for i in top_indices]
     
     # Log selected tags for debugging
-    print("Top 3 Tags:", top_3_tags)
+    print("Selected Tags:", top_tags)
     
-    return jsonify({'predicted_tags': top_3_tags})
+    return jsonify({'predicted_tags': top_tags})
 
 if __name__ == '__main__':
     app.run(debug=True)
