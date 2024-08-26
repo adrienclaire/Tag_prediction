@@ -14,6 +14,8 @@ import tensorflow_hub as hub
 from utils import clean_text, transform_dl_fct  # Import functions from utils.py
 import pickle
 import json
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+import gensim
 
 
 app = Flask(__name__)
@@ -59,10 +61,10 @@ s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_k
 
 # Define the S3 bucket and model file
 bucket_name = 'openclassroomprojet5'
-model_file_key = 'USE_SVC_SL_v2.pkl'
+model_file_key = 'w2v_SVC_SL_v2.pkl'
 
 # Download the model file from S3 if it doesn't exist locally
-model_path = 'USE_SVC_SL_v2.pkl'
+model_path = 'w2v_SVC_SL_v2.pkl'
 if not os.path.exists(model_path):
     s3.download_file(bucket_name, model_file_key, model_path)
 
@@ -74,7 +76,7 @@ mlb_file_name = 'mlb.pkl'
 # Download the file from S3 to a local file
 s3.download_file(bucket_name, mlb_file_name, mlb_file_name)
 
-# Load the model from the downloaded file
+# Load the multilabelbinarizer from the downloaded file
 with open(mlb_file_name, 'rb') as file:
     mlb = pickle.load(file)
 print("MultiLabelBinarizer loaded successfully from s3")
@@ -85,9 +87,30 @@ print("MultiLabelBinarizer loaded successfully from s3")
 #print("MultiLabelBinarizer loaded successfully")
 
 # Load the Universal Sentence Encoder
-print("Loading Universal Sentence Encoder...")
-embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
-print("USE model loaded successfully")
+#print("Loading Universal Sentence Encoder...")
+#embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+#print("USE model loaded successfully")
+
+# Load the embedding model from s3
+embed_model = 'word2vec_embedding_model.h5'
+# Download the file from S3 to a local file
+s3.download_file(bucket_name, embed_model, embed_model)
+
+# Load the embedding model from the downloaded file
+with open(embed_model, 'rb') as file:
+    mlb = pickle.load(file)
+print("W2v Embedding model loaded successfully from s3")
+
+# Load the tokenizer from s3
+tokenizer = 'tokenizer.pkl'
+# Download the file from S3 to a local file
+s3.download_file(bucket_name, tokenizer, tokenizer)
+
+# Load the embedding model from the downloaded file
+with open(tokenizer, 'rb') as file:
+    tokenizer = pickle.load(file)
+print("Tokenizer loaded successfully from s3")
+
 
 @app.route('/')
 def index():
@@ -105,11 +128,14 @@ def predict():
     # Clean the text
     cleaned_text = clean_text(text)
     
-    # Tokenize the cleaned text
-    tokenized_text = transform_dl_fct(cleaned_text)
+    # Tokenization and simple_preprocess
+    sentence = [gensim.utils.simple_preprocess(text)]
     
-    # Convert to embedding
-    embedding = embed([tokenized_text])
+    # Tokenize the input text
+    sequence = pad_sequences(tokenizer.texts_to_sequences(sentence), maxlen=120, padding='post')
+
+    # Embeded
+    embeddings = embed_model.predict(sequence)
     
     # Predict tags (this will return probabilities for each tag)
     y_pred_proba = model.predict(embedding)
@@ -118,7 +144,7 @@ def predict():
     print("Predicted Probabilities:", y_pred_proba)
     
     # Set a threshold for prediction confidence
-    threshold = 0.2  # Adjust this threshold based on your needs
+    threshold = 0.1  # Adjust this threshold based on your needs
     print(f"Threshold: {threshold}")
     
     # Sort the predicted probabilities in descending order
