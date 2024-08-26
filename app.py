@@ -125,7 +125,7 @@ def predict():
     data = request.get_json(force=True)
     text = data['text']
     
-    # Clean the text
+    # Clean the text from utils function
     cleaned_text = clean_text(text)
     
     # Tokenization and simple_preprocess
